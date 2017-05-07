@@ -38,4 +38,8 @@ export class AppConfigService {
     return this.http.get(this.baseApiUrl+'/track-city/'+id).map(res => res.json());
   }
 
+  stopTrackingCity(id: number) {
+    return this.http.get(this.baseApiUrl+'/untrack-city/'+id).map(res => res.json());
+  }
+
 }

@@ -11,7 +11,7 @@
           <h6 class="grey-text">Max: {{tempConfig.maxTemp}} | Min: {{tempConfig.minTemp}} </h6>
         </div>
         <div class="card-action">
-          <a class="btn-floating right waves-effect waves-light pink"><i class="material-icons">delete</i></a>
+          <a class="btn-floating right waves-effect waves-light pink" (click)="stopTrackingCity(tempConfig)"><i class="material-icons">delete</i></a>
         </div>
       </div>
     </div>
@@ -27,8 +27,8 @@
       <ng-template #showSelection>
         <div class="modal-content">
           <h4>Track weather of another city?</h4>
-          <select  materialize="material_select" [materializeSelectOptions]="availableCities" (change)='onSelectionChanged($event.target.value)'>
-            <option *ngFor="let option of availableCities" [value]="option.id">{{option.name}}</option>
+          <select [(ngModel)]="selectedCityId"  materialize="material_select" [(materializeSelectOptions)]="availableCities">
+            <option *ngFor="let option of availableCities, let i = index" [value]="option.id" [selected]="i==0">{{option.name}}</option>
           </select>
         </div>
         

@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
   modalActions = new EventEmitter<string | MaterializeAction>();
   availableCities: WeatherConf[] = [];
   selectedCityId: number;
+  selectedCity;
 
   openModal() {
     this.modalActions.emit({ action: "modal", params: ['open'] });
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
   }
 
   onSelectionChanged(data) {
+    console.log(this.selectedCity);
     this.selectedCityId = data;
   }
 
@@ -66,6 +68,13 @@ export class AppComponent implements OnInit {
       });
     }
   }
-  
 
+  stopTrackingCity(tempConfig: TemperatureConf) {
+    console.log(tempConfig);
+    this._appConfigSvc.stopTrackingCity(tempConfig.id).subscribe(res => {
+      this.availableCities.push(new WeatherConf(tempConfig.id, tempConfig.name));      
+      this.tempratureConfigs = this.tempratureConfigs.filter(config => config.id != tempConfig.id);
+    });
+  }
+  
 }

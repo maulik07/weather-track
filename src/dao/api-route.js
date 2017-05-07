@@ -32,6 +32,12 @@ router.get('/track-city/:id', function(req, res){
     });    
 });
 
-
+router.get('/untrack-city/:id', function(req, res){
+    var id = req.params.id;
+    City.findByIdAndUpdate(id, {selected: false}, function(err, city) {
+        if(err) throw err;
+        res.send('{"message": "Success"}');
+    });    
+});
 
 module.exports = router;

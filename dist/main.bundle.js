@@ -87,6 +87,7 @@ var AppComponent = (function () {
         });
     };
     AppComponent.prototype.onSelectionChanged = function (data) {
+        console.log(this.selectedCity);
         this.selectedCityId = data;
     };
     AppComponent.prototype.startTrackingNewCity = function () {
@@ -105,6 +106,14 @@ var AppComponent = (function () {
                 });
             });
         }
+    };
+    AppComponent.prototype.stopTrackingCity = function (tempConfig) {
+        var _this = this;
+        console.log(tempConfig);
+        this._appConfigSvc.stopTrackingCity(tempConfig.id).subscribe(function (res) {
+            _this.availableCities.push(new __WEBPACK_IMPORTED_MODULE_3__models_weather_conf__["a" /* WeatherConf */](tempConfig.id, tempConfig.name));
+            _this.tempratureConfigs = _this.tempratureConfigs.filter(function (config) { return config.id != tempConfig.id; });
+        });
     };
     return AppComponent;
 }());
@@ -211,7 +220,7 @@ module.exports = module.exports.toString();
 /***/ 206:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col s12 m6 l4\" *ngFor=\"let tempConfig of tempratureConfigs\">\n    <div class=\"card horizontal\">\n      <div class=\"card-image\">\n        <img src=\"http://ssl.gstatic.com/onebox/weather/128/sunny.png\">\n      </div>\n      <div class=\"card-stacked\">\n        <div class=\"card-content\">\n          <h4>{{tempConfig.name}}</h4>\n          <h5>{{tempConfig.currentTemp}}</h5>\n          <h6 class=\"grey-text\">Max: {{tempConfig.maxTemp}} | Min: {{tempConfig.minTemp}} </h6>\n        </div>\n        <div class=\"card-action\">\n          <a class=\"btn-floating right waves-effect waves-light pink\"><i class=\"material-icons\">delete</i></a>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"fixed-action-btn\">\n    <a class=\"btn-floating btn-large waves-effect waves-light pink modal-trigger\" (click)=\"openModal()\"><i class=\"material-icons\">add</i></a>\n  </div>\n\n  <!-- Add Config Modal -->\n  <div id=\"addConfig\" class=\"modal\" materialize=\"modal\" [materializeParams]=\"[{dismissible: true}]\" [materializeActions]=\"modalActions\">\n      <div *ngIf=\"availableCities.length > 0;then showSelection else displayMessage\"></div>\n    \n      <ng-template #showSelection>\n        <div class=\"modal-content\">\n          <h4>Track weather of another city?</h4>\n          <select  materialize=\"material_select\" [materializeSelectOptions]=\"availableCities\" (change)='onSelectionChanged($event.target.value)'>\n            <option *ngFor=\"let option of availableCities\" [value]=\"option.id\">{{option.name}}</option>\n          </select>\n        </div>\n        \n        <div class=\"modal-footer\">\n          <a (click)=\"startTrackingNewCity()\" class=\"modal-action modal-close waves-effect waves-green btn-flat\">Track now</a>\n        </div>\n      </ng-template>\n\n      <ng-template #displayMessage>\n        <div class=\"modal-content\">\n          <p class=\"grey-text\"> Ahh!! Seems like there are no more cities available to track </p>\n        </div>\n        <div class=\"modal-footer\">\n          <a class=\"modal-action modal-close waves-effect waves-green btn-flat\">Dismiss</a>\n        </div>\n      </ng-template>\n  </div>\n</div>"
+module.exports = "<div class=\"row\">\n  <div class=\"col s12 m6 l4\" *ngFor=\"let tempConfig of tempratureConfigs\">\n    <div class=\"card horizontal\">\n      <div class=\"card-image\">\n        <img src=\"http://ssl.gstatic.com/onebox/weather/128/sunny.png\">\n      </div>\n      <div class=\"card-stacked\">\n        <div class=\"card-content\">\n          <h4>{{tempConfig.name}}</h4>\n          <h5>{{tempConfig.currentTemp}}</h5>\n          <h6 class=\"grey-text\">Max: {{tempConfig.maxTemp}} | Min: {{tempConfig.minTemp}} </h6>\n        </div>\n        <div class=\"card-action\">\n          <a class=\"btn-floating right waves-effect waves-light pink\" (click)=\"stopTrackingCity(tempConfig)\"><i class=\"material-icons\">delete</i></a>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"fixed-action-btn\">\n    <a class=\"btn-floating btn-large waves-effect waves-light pink modal-trigger\" (click)=\"openModal()\"><i class=\"material-icons\">add</i></a>\n  </div>\n\n  <!-- Add Config Modal -->\n  <div id=\"addConfig\" class=\"modal\" materialize=\"modal\" [materializeParams]=\"[{dismissible: true}]\" [materializeActions]=\"modalActions\">\n      <div *ngIf=\"availableCities.length > 0;then showSelection else displayMessage\"></div>\n    \n      <ng-template #showSelection>\n        <div class=\"modal-content\">\n          <h4>Track weather of another city?</h4>\n          <select [(ngModel)]=\"selectedCityId\"  materialize=\"material_select\" [(materializeSelectOptions)]=\"availableCities\">\n            <option *ngFor=\"let option of availableCities, let i = index\" [value]=\"option.id\" [selected]=\"i==1\">{{option.name}}</option>\n          </select>\n        </div>\n        \n        <div class=\"modal-footer\">\n          <a (click)=\"startTrackingNewCity()\" class=\"modal-action modal-close waves-effect waves-green btn-flat\">Track now</a>\n        </div>\n      </ng-template>\n\n      <ng-template #displayMessage>\n        <div class=\"modal-content\">\n          <p class=\"grey-text\"> Ahh!! Seems like there are no more cities available to track </p>\n        </div>\n        <div class=\"modal-footer\">\n          <a class=\"modal-action modal-close waves-effect waves-green btn-flat\">Dismiss</a>\n        </div>\n      </ng-template>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -271,6 +280,9 @@ var AppConfigService = (function () {
     };
     AppConfigService.prototype.startTrackingNewCity = function (id) {
         return this.http.get(this.baseApiUrl + '/track-city/' + id).map(function (res) { return res.json(); });
+    };
+    AppConfigService.prototype.stopTrackingCity = function (id) {
+        return this.http.get(this.baseApiUrl + '/untrack-city/' + id).map(function (res) { return res.json(); });
     };
     return AppConfigService;
 }());
