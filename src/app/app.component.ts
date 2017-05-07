@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
   configs: WeatherConf[];
   tempratureConfigs: TemperatureConf[] = [];
   modalActions = new EventEmitter<string | MaterializeAction>();
-  selectOptions = [{name:"London"},{name:"Ahmadabad"}];
+  availableCities: WeatherConf[] = [];
+  selectedCityId: number;
 
   openModal() {
     this.modalActions.emit({ action: "modal", params: ['open'] });
@@ -39,6 +40,31 @@ export class AppComponent implements OnInit {
         });
       })
     });
+
+    this._appConfigSvc.getAvailableCities().subscribe(availableCities => {
+      this.availableCities = availableCities;
+    });
+  }
+
+  onSelectionChanged(data) {
+    this.selectedCityId = data;
+  }
+
+  startTrackingNewCity() {
+    if (this.selectedCityId !== undefined) {
+      let id = this.selectedCityId;
+      this._appConfigSvc.startTrackingNewCity(id).subscribe(res => {
+          this.availableCities = this.availableCities.filter(function(value) {
+            return value.id != id;
+          });
+          this._weatherSvc.getTempratureConfig([new WeatherConf(id)]).subscribe(results => {
+            results.forEach(result => {
+              console.log(result);
+              this.tempratureConfigs.push(result);
+            });
+          });
+      });
+    }
   }
   
 

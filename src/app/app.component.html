@@ -22,14 +22,28 @@
 
   <!-- Add Config Modal -->
   <div id="addConfig" class="modal" materialize="modal" [materializeParams]="[{dismissible: true}]" [materializeActions]="modalActions">
-    <div class="modal-content">
-      <h4>Track weather of another city?</h4>
-      <select materialize="material_select" [materializeSelectOptions]="selectOptions">
-        <option *ngFor="let option of selectOptions" [value]="option.value">{{option.name}}</option>
-      </select>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Track now</a>
-    </div>
+      <div *ngIf="availableCities.length > 0;then showSelection else displayMessage"></div>
+    
+      <ng-template #showSelection>
+        <div class="modal-content">
+          <h4>Track weather of another city?</h4>
+          <select  materialize="material_select" [materializeSelectOptions]="availableCities" (change)='onSelectionChanged($event.target.value)'>
+            <option *ngFor="let option of availableCities" [value]="option.id">{{option.name}}</option>
+          </select>
+        </div>
+        
+        <div class="modal-footer">
+          <a (click)="startTrackingNewCity()" class="modal-action modal-close waves-effect waves-green btn-flat">Track now</a>
+        </div>
+      </ng-template>
+
+      <ng-template #displayMessage>
+        <div class="modal-content">
+          <p class="grey-text"> Ahh!! Seems like there are no more cities available to track </p>
+        </div>
+        <div class="modal-footer">
+          <a class="modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
+        </div>
+      </ng-template>
   </div>
 </div>
