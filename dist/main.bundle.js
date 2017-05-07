@@ -366,7 +366,7 @@ var _a;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 var environment = {
     production: true,
-    baseApiUrl: 'http://weathertrack.herokuapp.com//api'
+    baseApiUrl: 'http://weathertrack.herokuapp.com/api'
 };
 //# sourceMappingURL=environment.js.map
 
