@@ -44,7 +44,12 @@ export class AppComponent implements OnInit {
 
     this._appConfigSvc.getAvailableCities().subscribe(availableCities => {
       this.availableCities = availableCities;
+      this._resetDefaultSelectedCity();   
     });
+  }
+
+  private _resetDefaultSelectedCity() {
+    this.selectedCityId = this.availableCities.length > 0 ? this.availableCities[0].id : undefined;
   }
 
   onSelectionChanged(data) {
@@ -59,6 +64,7 @@ export class AppComponent implements OnInit {
           this.availableCities = this.availableCities.filter(function(value) {
             return value.id != id;
           });
+          this._resetDefaultSelectedCity();   
           this._weatherSvc.getTempratureConfig([new WeatherConf(id)]).subscribe(results => {
             results.forEach(result => {
               console.log(result);
@@ -72,7 +78,8 @@ export class AppComponent implements OnInit {
   stopTrackingCity(tempConfig: TemperatureConf) {
     console.log(tempConfig);
     this._appConfigSvc.stopTrackingCity(tempConfig.id).subscribe(res => {
-      this.availableCities.push(new WeatherConf(tempConfig.id, tempConfig.name));      
+      this.availableCities.push(new WeatherConf(tempConfig.id, tempConfig.name));
+      this._resetDefaultSelectedCity();       
       this.tempratureConfigs = this.tempratureConfigs.filter(config => config.id != tempConfig.id);
     });
   }
