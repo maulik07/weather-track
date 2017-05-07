@@ -1,17 +1,35 @@
 <div class="row">
-<div class="col s12 m6" *ngFor="let number of [0,1,2,3,4]">   
+  <div class="col s12 m6 l4" *ngFor="let tempConfig of tempratureConfigs">
     <div class="card horizontal">
       <div class="card-image">
-        <img src="http://lorempixel.com/100/190/nature/6">
+        <img src="http://ssl.gstatic.com/onebox/weather/128/sunny.png">
       </div>
       <div class="card-stacked">
         <div class="card-content">
-          <p>I am a very simple card. I am good at containing small bits of information.</p>
+          <h4>{{tempConfig.name}}</h4>
+          <h5>{{tempConfig.currentTemp}}</h5>
+          <h6 class="grey-text">Max: {{tempConfig.maxTemp}} | Min: {{tempConfig.minTemp}} </h6>
         </div>
         <div class="card-action">
-          <a href="#">This is a link</a>
+          <a class="btn-floating right waves-effect waves-light pink"><i class="material-icons">delete</i></a>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="fixed-action-btn">
+    <a class="btn-floating btn-large waves-effect waves-light pink modal-trigger" (click)="openModal()"><i class="material-icons">add</i></a>
+  </div>
+
+  <!-- Add Config Modal -->
+  <div id="addConfig" class="modal" materialize="modal" [materializeParams]="[{dismissible: true}]" [materializeActions]="modalActions">
+    <div class="modal-content">
+      <h4>Track weather of another city?</h4>
+      <select materialize="material_select" [materializeSelectOptions]="selectOptions">
+        <option *ngFor="let option of selectOptions" [value]="option.value">{{option.name}}</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Track now</a>
     </div>
   </div>
 </div>
