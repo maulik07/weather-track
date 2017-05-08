@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col s12 m6 l4" *ngFor="let tempConfig of tempratureConfigs">
     <div class="card horizontal">
-      <div class="card-image">
-        <img src="http://ssl.gstatic.com/onebox/weather/128/sunny.png">
+      <div class="card-image">        
+        <div [ngClass]="{'cold-image': tempConfig.currentTemp <= 23.00, 'hot-image': tempConfig.currentTemp > 23.00}"></div>
       </div>
       <div class="card-stacked">
         <div class="card-content">
@@ -11,7 +11,9 @@
           <h6 class="grey-text">Max: {{tempConfig.maxTemp}} | Min: {{tempConfig.minTemp}} </h6>
         </div>
         <div class="card-action">
-          <a class="btn-floating right waves-effect waves-light pink" (click)="stopTrackingCity(tempConfig)"><i class="material-icons">delete</i></a>
+          <a materialize="tooltip" class="btn-floating right waves-effect waves-light pink tooltipped" (click)="stopTrackingCity(tempConfig)" data-position="left" data-delay="50" data-tooltip="Not interested anymore!">
+            <i class="material-icons">delete</i>
+          </a>
         </div>
       </div>
     </div>
@@ -27,7 +29,7 @@
       <ng-template #showSelection>
         <div class="modal-content">
           <h4>Track weather of another city?</h4>
-          <select [(ngModel)]="selectedCityId"  materialize="material_select" [(materializeSelectOptions)]="availableCities">
+          <select [(ngModel)]="selectedCityId"  materialize="material_select">
             <option *ngFor="let option of availableCities" [value]="option.id">{{option.name}}</option>
           </select>
         </div>

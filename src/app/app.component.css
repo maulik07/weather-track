@@ -1,0 +1,13 @@
+.cold-image {
+   background-image: url('../assets/cold.png');
+   background-repeat: no-repeat;
+   height: 128px;
+   width: 128px;
+}
+
+.hot-image {
+   background-image: url('../assets/hot.png');
+   background-repeat: no-repeat;
+   height: 128px;
+   width: 128px;
+}
